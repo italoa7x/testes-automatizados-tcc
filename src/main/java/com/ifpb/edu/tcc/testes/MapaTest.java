@@ -7,18 +7,19 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.openqa.selenium.By;
+import org.junit.runners.MethodSorters;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 
-public class AbrirAppTest {
+@FixMethodOrder(MethodSorters.JVM)
 
-	// get by id = buscar pelo resource-id
-	// get by accessibility id = content desv
+public class MapaTest {
+
 	private AndroidDriver<MobileElement> driver;
 	private DesiredCapabilities capabilities = new DesiredCapabilities();
 
@@ -40,7 +41,7 @@ public class AbrirAppTest {
 	}
 
 	@Test
-	public void deveFazerLoginComSucessoInformandoMatriculaEsenhaValida() throws InterruptedException {
+	public void deveExpandirOmenuDeVisoesDoMapa() throws InterruptedException {
 		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 
 		MobileElement campoMatricula = driver.findElement(MobileBy.AccessibilityId("LoginPageRegistrationValue"));
@@ -57,7 +58,38 @@ public class AbrirAppTest {
 
 		botaoEntrar.click();
 
-		Thread.sleep(20000);
+		Thread.sleep(5000);
+
+		List<MobileElement> menuFlutuante = driver.findElements(MobileBy.className("android.view.ViewGroup"));
+
+		for (MobileElement el : menuFlutuante) {
+			System.out.println(el.getText());
+		}
+
+		// menuFlutuante.click();
+
+		Thread.sleep(5000);
+	}
+
+	@Test
+	public void deveAlterarAvisaoDoMapaParaAvisaoDeSateliteEvoltarParaAvisaoPadrao() throws InterruptedException {
+		MobileElement menuFlutuante = driver.findElement(MobileBy.AccessibilityId("FloatingMenuButton"));
+		menuFlutuante.click();
+		Thread.sleep(3000);
+
+		// procura a opcao de mapa de satelite e pressiona
+		MobileElement opcaoMapaSatelite = driver.findElement(MobileBy.AccessibilityId("FloatingMenuOptionSatelite"));
+		opcaoMapaSatelite.click();
+		Thread.sleep(3000);
+
+		// abre o menu e procura a opcao de mapa geografico (mapa padrao) e o pressiona
+		menuFlutuante.click();
+		Thread.sleep(3000);
+
+		MobileElement opcaoMapaGeografico = driver.findElement(MobileBy.AccessibilityId("FloatingMenuOptionOutdoors"));
+		opcaoMapaGeografico.click();
+		Thread.sleep(3000);
+
 	}
 
 	@After
